@@ -17,9 +17,14 @@ public class bamsongiController : MonoBehaviour
     {
         GetComponent<Rigidbody>().AddForce(dir);
     }
-    private void OncOllisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         GetComponent<Rigidbody>().isKinematic = false;
         GetComponent<ParticleSystem>().Play();
+
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            Destroy(gameObject); // ¹ã¼ÛÀÌ°¡ ¶¥¿¡ ´êÀ¸¸é ÀÚ½ÅÀ» ÆÄ±«
+        }
     }
 }
