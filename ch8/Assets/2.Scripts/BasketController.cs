@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class BasketController : MonoBehaviour
 {
+    public AudioClip appleSE;
+    public AudioClip bombSE;
+    AudioSource aud;
     // Start is called before the first frame update
     void Start()
     {
         Application.targetFrameRate = 60;
+        aud = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -24,6 +28,24 @@ public class BasketController : MonoBehaviour
                 transform.position = new Vector3(x, transform.position.y, z);
 
             }
+        }
+    }
+
+    //private void onCollisionEnter(Collision collision)
+    //{
+    //   Debug.Log("Collision detected with: " + collision.gameObject.name);
+    //}
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Apple")
+        {
+            aud.PlayOneShot(appleSE);
+            Destroy(other.gameObject);
+        }
+        else if (other.gameObject.tag == "Bomb")
+        {
+            aud.PlayOneShot(bombSE);
+            Destroy(other.gameObject);
         }
     }
 }
