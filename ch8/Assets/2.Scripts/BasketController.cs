@@ -7,45 +7,41 @@ public class BasketController : MonoBehaviour
     public AudioClip appleSE;
     public AudioClip bombSE;
     AudioSource aud;
-    // Start is called before the first frame update
+    GameObject director;
+
     void Start()
     {
-        Application.targetFrameRate = 60;
-        aud = GetComponent<AudioSource>();
+        this.director = GameObject.Find("GameDirector");
+        this.aud = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Apple")
+        {
+            this.director.GetComponent<GameDirector>().GetApple();
+            this.aud.PlayOneShot(this.appleSE);
+        }
+        else
+        {
+            this.director.GetComponent<GameDirector>().GetBomb();
+            this.aud.PlayOneShot(this.bombSE);
+        }
+        Destroy(other.gameObject);
+    }
+
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
-                float x = Mathf.Round(hit.point.x);
-                float z = Mathf.Round(hit.point.z);
-                transform.position = new Vector3(x, transform.position.y, z);
-
+                float x = Mathf.RoundToInt(hit.point.x);
+                float z = Mathf.RoundToInt(hit.point.z);
+                transform.position = new Vector3(x, 0, z);
             }
-        }
-    }
-
-    //private void onCollisionEnter(Collision collision)
-    //{
-    //   Debug.Log("Collision detected with: " + collision.gameObject.name);
-    //}
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Apple")
-        {
-            aud.PlayOneShot(appleSE);
-            Destroy(other.gameObject);
-        }
-        else if (other.gameObject.tag == "Bomb")
-        {
-            aud.PlayOneShot(bombSE);
-            Destroy(other.gameObject);
         }
     }
 }
